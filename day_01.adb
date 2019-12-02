@@ -2,7 +2,15 @@ with Ada.Text_IO;
 with Ada.Integer_Text_IO;
 
 procedure Day_01 is
-   function Fuel(Mass: Natural) return Natural is (Mass / 3 - 2);
+   function Fuel(Mass: Natural) return Natural is
+      Result: constant Integer := Mass / 3 - 2;
+   begin
+      if Result <= 0 then
+         return 0;
+      else
+         return Result + Fuel(Result);
+      end if;
+   end Fuel;
 
    Total_Fuel: Natural := 0;
    Module_Mass: Natural;
