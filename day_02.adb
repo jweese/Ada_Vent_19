@@ -16,7 +16,7 @@ begin
             M.Poke(Addr => 16#1#, Value => Noun);
             M.Poke(Addr => 16#2#, Value => Verb);
             M.Run;
-            if M.Peek(0) = 19690720 then
+            if M.Peek(0) = 1969_07_20 then
                Ada.Integer_Text_IO.Put(Integer(Noun));
                Ada.Integer_Text_IO.Put(Integer(Verb));
                return;
