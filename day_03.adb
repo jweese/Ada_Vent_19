@@ -54,15 +54,24 @@ procedure Day_03 is
 
    function Manhattan(P: Point) return Natural is (abs(P.X) + abs(P.Y));
 
+   function Steps(W: Wire_Vec.Vector; P: Point) return Natural is
+      (W.Find_Index(P));
+
    Wire_1: constant Wire_Vec.Vector := Read_Wire;
    Wire_2: constant Wire_Vec.Vector := Read_Wire;
    Min_Dist: Natural := 0;
 begin
    for P of Wire_1 loop
       for Q of Wire_2 loop
-         if P = Q and then (Min_Dist = 0 or else Manhattan(P) < Min_Dist) then
-            Min_Dist := Manhattan(P);
-            exit;
+         if P = Q then
+            declare
+               Dist: constant Natural := Steps(Wire_1, P) + Steps(Wire_2, Q);
+            begin
+               if Min_Dist = 0 or else Dist < Min_Dist then
+                  Min_Dist := Dist;
+                  exit;
+               end if;
+            end;
          end if;
       end loop;
    end loop;
