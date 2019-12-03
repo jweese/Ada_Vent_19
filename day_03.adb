@@ -52,7 +52,8 @@ procedure Day_03 is
       return W;
    end Read_Wire;
 
-   function Manhattan(P: Point) return Natural is (abs(P.X) + abs(P.Y));
+   -- only used in part 1
+   -- function Manhattan(P: Point) return Natural is (abs(P.X) + abs(P.Y));
 
    function Steps(W: Wire_Vec.Vector; P: Point) return Natural is
       (W.Find_Index(P));
