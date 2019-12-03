@@ -13,7 +13,7 @@ package Intcode is
 
 private
    type Machine(High_Mem: Memory.Address) is tagged record
-      PC: Memory.Address;
+      PC: Memory.Address;  -- program counter (i.e. instruction pointer)
       Mem: Memory.Block(0 .. High_Mem);
    end record;
 end Intcode;
