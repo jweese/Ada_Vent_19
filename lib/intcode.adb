@@ -60,5 +60,5 @@ package body Intcode is
             Ops(Curr_Op)(M);
          end if;
       end loop;
-   end;
+   end Run;
 end Intcode;
