@@ -39,19 +39,8 @@ package body Intcode is
    type Op is access procedure(M: in out Machine);
    type Op_Table is array(Op_Code) of Op;
 
-   function Deref(M: Machine; Ptr: Memory.Value) return Memory.Value is
-      (M.Mem(Memory.Address(Ptr)));
-
    procedure Op_Add is new Intcode.Binary_Op(Bin_Op => "+");
-
-   procedure Op_Mul(M: in out Machine) is
-      A: constant Memory.Value := M.Mem(M.PC + 1);
-      B: constant Memory.Value := M.Mem(M.PC + 2);
-      Dst: constant Memory.Value := M.Mem(M.PC + 3);
-   begin
-      M.Mem(Memory.Address(Dst)) := Deref(M, A) * Deref(M, B);
-      M.PC := M.PC + 4;
-   end Op_Mul;
+   procedure Op_Mul is new Intcode.Binary_Op(Bin_Op => "*");
 
    Ops: constant Op_Table := (
       Add => Op_Add'Access,
