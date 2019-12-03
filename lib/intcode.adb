@@ -1,7 +1,6 @@
 with Intcode.Binary_Op;
 
 package body Intcode is
-   use type Memory.Address;
    use type Memory.Value;
 
    function New_Machine(Mem: Memory.Block) return Machine is
