@@ -15,6 +15,22 @@ package body Intcode is
       M.Mem(Addr) := Value;
    end Poke;
 
+   type Op_Code is (
+      Add,
+      Mul,
+      Halt
+   );
+
+   function Get_Op_Code(V: Memory.Value) return Op_Code is
+   begin
+      case V is
+            when 1 => return Add;
+            when 2 => return Mul;
+            when 99 => return Halt;
+            when others => raise Constraint_Error;
+      end case;
+   end Get_Op_Code;
+
    procedure Run(M: in out Machine) is
    begin
       null;
