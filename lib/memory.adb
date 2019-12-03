@@ -4,7 +4,7 @@ with Ada.Integer_Text_IO;
 with Ada.IO_Exceptions;
 
 package body Memory is
-   function Get return Block is
+   function Read_Comma_Separated return Block is
       package Vec is new Ada.Containers.Vectors(
          Index_type => Address, Element_Type => Value);
       V: Vec.Vector := Vec.Empty_Vector;
@@ -28,5 +28,5 @@ package body Memory is
          end loop;
          return Result;
       end;
-   end Get;
+   end Read_Comma_Separated;
 end Memory;

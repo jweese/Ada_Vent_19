@@ -3,7 +3,7 @@ with Intcode;
 with Memory;
 
 procedure Day_02 is
-   Mem: constant Memory.Block := Memory.Get;
+   Mem: constant Memory.Block := Memory.Read_Comma_Separated;
 
    use type Memory.Value;
    subtype Input is Memory.Value range 0..99;
