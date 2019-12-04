@@ -35,7 +35,8 @@ procedure Day_03 is
             for I in 1 .. Distance loop
                W.Append(Point'(X => Curr.X - I, Y => Curr.Y));
             end loop;
-         when others => raise Ada.IO_Exceptions.Data_Error with Character'Image(Dir);
+         when others =>
+            raise Ada.IO_Exceptions.Data_Error with Character'Image(Dir);
       end case;
    end Append_Comma_Separated_Wire_Points;
 
