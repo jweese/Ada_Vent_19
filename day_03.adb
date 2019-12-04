@@ -55,26 +55,22 @@ procedure Day_03 is
    -- only used in part 1
    -- function Manhattan(P: Point) return Natural is (abs(P.X) + abs(P.Y));
 
-   function Steps(W: Wire_Vec.Vector; P: Point) return Natural is
-      (W.Find_Index(P));
-
    Wire_1: constant Wire_Vec.Vector := Read_Wire;
    Wire_2: constant Wire_Vec.Vector := Read_Wire;
    Min_Dist: Natural := 0;
 begin
-   for P of Wire_1 loop
-      for Q of Wire_2 loop
-         if P = Q then
-            declare
-               Dist: constant Natural := Steps(Wire_1, P) + Steps(Wire_2, Q);
-            begin
-               if Min_Dist = 0 or else Dist < Min_Dist then
-                  Min_Dist := Dist;
-                  exit;
-               end if;
-            end;
+   for I in Wire_1.First_Index .. Wire_1.Last_Index loop
+      declare
+         P: constant Point := Wire_1(I);
+         J: constant Wire_Vec.Extended_Index := Wire_2.Find_Index(P);
+         Dist: constant Natural := I + J;
+      begin
+         if J /= Wire_Vec.No_Index then
+            if Min_Dist = 0 or else Dist < Min_Dist then
+               Min_Dist := Dist;
+            end if;
          end if;
-      end loop;
+      end;
    end loop;
    Ada.Integer_Text_IO.Put(Min_Dist);
 end Day_03;
