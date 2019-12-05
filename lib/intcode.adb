@@ -1,8 +1,6 @@
-with Intcode.Binary_Op;
+with Intcode.Op;
 
 package body Intcode is
-   use type Memory.Value;
-
    function New_Machine(Mem: Memory.Block) return Machine is
       (
          High_Mem => Memory.Address'Pred(Mem'Length),
@@ -19,46 +17,17 @@ package body Intcode is
       M.Mem(Addr) := Value;
    end Poke;
 
-   type Op_Code is (
-      Add,
-      Mul,
-      Halt
-   );
-
-   function Get_Op_Code(V: Memory.Value) return Op_Code is
-   begin
-      case V is
-            when 1 => return Add;
-            when 2 => return Mul;
-            when 99 => return Halt;
-            when others => raise Constraint_Error with "op code" & V'Image;
-      end case;
-   end Get_Op_Code;
-
-   type Op is access procedure(M: in out Machine);
-   type Op_Table is array(Op_Code) of Op;
-
-   procedure Op_Add is new Intcode.Binary_Op(Bin_Op => "+");
-   procedure Op_Mul is new Intcode.Binary_Op(Bin_Op => "*");
-
-   Ops: constant Op_Table := (
-      Add => Op_Add'Access,
-      Mul => Op_Mul'Access,
-      others => null
-   );
-
    procedure Run(M: in out Machine) is
-      Curr_Op: Op_Code;
+      use type Intcode.Op.Code;
    begin
       loop
-         Curr_Op := Get_Op_Code(M.Mem(M.PC));
-         exit when Curr_Op = Halt;
-
-         if Ops(Curr_Op) = null then
-            raise Program_Error;
-         else
-            Ops(Curr_Op)(M);
-         end if;
+         declare
+            Curr_Op: constant Intcode.Op.Schema :=
+               Intcode.Op.Decode(M.Mem(M.PC));
+         begin
+            exit when Curr_Op.Instruction = Op.Halt;
+            Intcode.Op.Exec(Curr_Op, M);
+         end;
       end loop;
    end Run;
 end Intcode;
