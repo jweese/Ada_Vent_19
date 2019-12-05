@@ -79,6 +79,7 @@ package body Intcode.Op is
          when Get =>
             Ada.Text_IO.Put("? ");
             Ada.Integer_Text_IO.Get(Integer(M.Mem(Store_To)));
+            Ada.Text_IO.New_Line;
          when Put =>
             Ada.Integer_Text_IO.Put(Integer(Params(1)));
             Ada.Text_IO.New_Line;
