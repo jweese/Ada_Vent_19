@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gnatflags=(-Ilib -Wall -O3)
+gnatflags=(-Ilib -Wall -O2)
 
 
 if [[ -z "$1" ]]; then
