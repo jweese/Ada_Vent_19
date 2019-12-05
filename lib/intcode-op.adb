@@ -1,4 +1,5 @@
 package body Intcode.Op is
+   use type Memory.Address;
    use type Memory.Value;
 
    Instruction_Size: constant array (Code) of Natural := (
@@ -10,10 +11,10 @@ package body Intcode.Op is
    function Get_Code(V: Memory.Value) return Code is
    begin
       case V is
-            when 1 => return Add;
-            when 2 => return Mul;
-            when 99 => return Halt;
-            when others => raise Constraint_Error with "op code" & V'Image;
+         when 1 => return Add;
+         when 2 => return Mul;
+         when 99 => return Halt;
+         when others => raise Constraint_Error with "op code" & V'Image;
       end case;
    end Get_Code;
 
@@ -35,8 +36,22 @@ package body Intcode.Op is
       return Result;
    end Decode;
 
-   procedure Exec(S: in Schema; M: in out Machine) is
+   function Load(From: Machine; PC_Offset: Positive; Mode: Parameter_Mode)
+         return Memory.Value is
+      V: constant Memory.Value := From.Mem(From.PC + Memory.Address(PC_Offset));
    begin
-      null;
+      case Mode is
+         when Immediate => return V;
+         when Position => return From.Mem(Memory.Address(V));
+      end case;
+   end Load;
+
+   procedure Exec(S: in Schema; M: in out Machine) is
+      Params: array (S.Params'Range) of Memory.Value;
+   begin
+      for I in Params'Range loop
+         Params(I) := Load(From => M, PC_Offset => I, Mode => S.Params(I));
+      end loop;
+      M.PC := M.PC + Params'Length + 1;
    end Exec;
 end Intcode.Op;
