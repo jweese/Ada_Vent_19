@@ -10,6 +10,10 @@ package body Intcode.Op is
       Mul => 3,
       Get => 1,
       Put => 1,
+      Jnz => 2,
+      Jz => 2,
+      Lt => 3,
+      Eq => 3,
       Halt => 0
    );
 
@@ -20,6 +24,10 @@ package body Intcode.Op is
          when 2 => return Mul;
          when 3 => return Get;
          when 4 => return Put;
+         when 5 => return Jnz;
+         when 6 => return Jz;
+         when 7 => return Lt;
+         when 8 => return Eq;
          when 99 => return Halt;
          when others => raise Constraint_Error with "op code" & V'Image;
       end case;
@@ -74,6 +82,18 @@ package body Intcode.Op is
          when Put =>
             Ada.Integer_Text_IO.Put(Integer(Params(1)));
             Ada.Text_IO.New_Line;
+         when Jnz =>
+            if Params(1) /= 0 then
+               M.PC := Memory.Address(Params(2));
+               return;
+            end if;
+         when Jz =>
+            if Params(1) = 0 then
+               M.PC := Memory.Address(Params(2));
+               return;
+            end if;
+         when Lt => M.Mem(Store_To) := (if Params(1) < Params(2) then 1 else 0);
+         when Eq => M.Mem(Store_To) := (if Params(1) = Params(2) then 1 else 0);
       end case;
 
       M.PC := M.PC + Params'Length + 1;

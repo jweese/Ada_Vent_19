@@ -6,6 +6,10 @@ package Intcode.Op is
       Mul,
       Get,
       Put,
+      Jnz,
+      Jz,
+      Lt,
+      Eq,
       Halt
    );
 
