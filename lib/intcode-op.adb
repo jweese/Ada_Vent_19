@@ -36,8 +36,10 @@ package body Intcode.Op is
       return Result;
    end Decode;
 
-   function Load(From: Machine; PC_Offset: Positive; Mode: Parameter_Mode)
-         return Memory.Value is
+   function Load(
+         From: Machine;
+         PC_Offset: Positive;
+         Mode: Parameter_Mode) return Memory.Value is
       V: constant Memory.Value := From.Mem(From.PC + Memory.Address(PC_Offset));
    begin
       case Mode is
@@ -48,10 +50,24 @@ package body Intcode.Op is
 
    procedure Exec(S: in Schema; M: in out Machine) is
       Params: array (S.Params'Range) of Memory.Value;
+      Store_To: Memory.Address;
    begin
       for I in Params'Range loop
          Params(I) := Load(From => M, PC_Offset => I, Mode => S.Params(I));
       end loop;
+
+      case S.Instruction is
+         when Halt => null;
+         when Add =>
+            Store_To := Memory.Address(
+               Load(From => M, PC_Offset => 3, Mode => Immediate));
+            M.Mem(Store_To) := Params(1) + Params(2);
+         when Mul =>
+            Store_To := Memory.Address(
+               Load(From => M, PC_Offset => 3, Mode => Immediate));
+            M.Mem(Store_To) := Params(1) * Params(2);
+      end case;
+
       M.PC := M.PC + Params'Length + 1;
    end Exec;
 end Intcode.Op;
