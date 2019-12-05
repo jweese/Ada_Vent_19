@@ -57,7 +57,8 @@ package body Intcode.Op is
 
    procedure Exec(S: in Schema; M: in out Machine) is
       Params: array (S.Params'Range) of Memory.Value;
-      Store_To: Memory.Address;
+      Store_To: constant Memory.Address := Memory.Address(
+         Load(From => M, PC_Offset => Params'Last, Mode => Immediate));
    begin
       for I in Params'Range loop
          Params(I) := Load(From => M, PC_Offset => I, Mode => S.Params(I));
@@ -65,17 +66,9 @@ package body Intcode.Op is
 
       case S.Instruction is
          when Halt => null;
-         when Add =>
-            Store_To := Memory.Address(
-               Load(From => M, PC_Offset => 3, Mode => Immediate));
-            M.Mem(Store_To) := Params(1) + Params(2);
-         when Mul =>
-            Store_To := Memory.Address(
-               Load(From => M, PC_Offset => 3, Mode => Immediate));
-            M.Mem(Store_To) := Params(1) * Params(2);
+         when Add => M.Mem(Store_To) := Params(1) + Params(2);
+         when Mul => M.Mem(Store_To) := Params(1) * Params(2);
          when Get =>
-            Store_To := Memory.Address(
-               Load(From => M, PC_Offset => 1, Mode => Immediate));
             Ada.Text_IO.Put("? ");
             Ada.Integer_Text_IO.Get(Integer(M.Mem(Store_To)));
          when Put =>
