@@ -10,8 +10,7 @@ procedure Day_04 is
       function Has_Double(S: Image_Middle) return Boolean is
          (S(1) /= S(2) and S(2) = S(3) and S(3) /= S(4));
 
-      Non_Descending: Boolean := True;
-      Any_Has_Double: Boolean := False;
+      Non_Descending, Any_Has_Double: Boolean;
    begin
       Ada.Integer_Text_IO.Put(To => Image(2..7), Item => Integer(C));
       Any_Has_Double := (for some I in 1 .. 5 => Has_Double(Image(I .. I + 3)));
