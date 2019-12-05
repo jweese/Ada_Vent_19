@@ -1,3 +1,5 @@
+with Ada.Integer_Text_IO;
+
 package body Intcode.Op is
    use type Memory.Address;
    use type Memory.Value;
@@ -5,6 +7,8 @@ package body Intcode.Op is
    Instruction_Size: constant array (Code) of Natural := (
       Add => 3,
       Mul => 3,
+      Get => 1,
+      Put => 1,
       Halt => 0
    );
 
@@ -13,6 +17,8 @@ package body Intcode.Op is
       case V is
          when 1 => return Add;
          when 2 => return Mul;
+         when 3 => return Get;
+         when 4 => return Put;
          when 99 => return Halt;
          when others => raise Constraint_Error with "op code" & V'Image;
       end case;
@@ -66,6 +72,11 @@ package body Intcode.Op is
             Store_To := Memory.Address(
                Load(From => M, PC_Offset => 3, Mode => Immediate));
             M.Mem(Store_To) := Params(1) * Params(2);
+         when Get =>
+            Store_To := Memory.Address(
+               Load(From => M, PC_Offset => 1, Mode => Immediate));
+            Ada.Integer_Text_IO.Get(Integer(M.Mem(Store_To)));
+         when Put => Ada.Integer_Text_IO.Get(Integer(Params(1)));
       end case;
 
       M.PC := M.PC + Params'Length + 1;

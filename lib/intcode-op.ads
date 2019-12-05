@@ -4,6 +4,8 @@ package Intcode.Op is
    type Code is (
       Add,
       Mul,
+      Get,
+      Put,
       Halt
    );
 
