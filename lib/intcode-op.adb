@@ -1,4 +1,5 @@
 with Ada.Integer_Text_IO;
+with Ada.Text_IO;
 
 package body Intcode.Op is
    use type Memory.Address;
@@ -75,8 +76,11 @@ package body Intcode.Op is
          when Get =>
             Store_To := Memory.Address(
                Load(From => M, PC_Offset => 1, Mode => Immediate));
+            Ada.Text_IO.Put("? ");
             Ada.Integer_Text_IO.Get(Integer(M.Mem(Store_To)));
-         when Put => Ada.Integer_Text_IO.Get(Integer(Params(1)));
+         when Put =>
+            Ada.Integer_Text_IO.Put(Integer(Params(1)));
+            Ada.Text_IO.New_Line;
       end case;
 
       M.PC := M.PC + Params'Length + 1;
