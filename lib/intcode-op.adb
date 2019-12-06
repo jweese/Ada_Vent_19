@@ -73,15 +73,21 @@ package body Intcode.Op is
       end loop;
 
       case S.Instruction is
-         when Halt => null;
+         when Halt => return;
+
+         -- Arithmetic
          when Add => M.Mem(Store_To) := Params(1) + Params(2);
          when Mul => M.Mem(Store_To) := Params(1) * Params(2);
+
+         -- IO
          when Get =>
             Ada.Text_IO.Put("? ");
             Ada.Integer_Text_IO.Get(Integer(M.Mem(Store_To)));
          when Put =>
             Ada.Integer_Text_IO.Put(Integer(Params(1)));
             Ada.Text_IO.New_Line;
+
+         -- Transfer Control
          when Jnz =>
             if Params(1) /= 0 then
                M.PC := Memory.Address(Params(2));
@@ -92,6 +98,8 @@ package body Intcode.Op is
                M.PC := Memory.Address(Params(2));
                return;
             end if;
+
+         -- Comparison
          when Lt => M.Mem(Store_To) := (if Params(1) < Params(2) then 1 else 0);
          when Eq => M.Mem(Store_To) := (if Params(1) = Params(2) then 1 else 0);
       end case;
