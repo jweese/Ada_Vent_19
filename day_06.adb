@@ -24,7 +24,7 @@ procedure Day_06 is
             return (Parent => S(S'First .. I - 1), Self => S(I + 1 .. S'Last));
          end if;
       end loop;
-      raise Constraint_Error with "bad orbit" & S;
+      raise Constraint_Error with "orbit missing ')': " & S;
    end Get;
    
    function Count_Orbits(O: Orbit) return Positive is
