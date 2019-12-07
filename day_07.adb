@@ -33,12 +33,20 @@ procedure Day_07 is
       for J in Input'Range loop
          Amps(J).Load(From => Mem);
          Amps(J).Exec;
-         Amps(J).Put(Integer(Input(J)));
+         Amps(J).Put(5 + Integer(Input(J)));
       end loop;
 
-      for A of Amps loop
-         A.Put(I);
-         A.Get(I);
+      loop
+         for A of Amps loop
+            A.Put(I);
+            A.Get(I);
+         end loop;
+         select
+            Amps(Amps'Last).Shutdown;
+            exit;
+         else
+            null;
+         end select;
       end loop;
 
       return I;
