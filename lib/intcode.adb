@@ -19,12 +19,11 @@ package body Intcode is
       end Read;
 
    begin
-      accept Load(From: in Memory.Block) do
+      accept Load_And_Exec(From: in Memory.Block) do
          Mem := From;
          PC := 0;
-      end Load;
+      end Load_And_Exec;
 
-      accept Exec;
       loop
          declare
             Curr_Op: constant Schema := Decode(Mem(PC));

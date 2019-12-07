@@ -16,8 +16,7 @@ begin
          begin
             P(16#1#) := Noun;
             P(16#2#) := Verb;
-            M.Load(P);
-            M.Exec;
+            M.Load_And_Exec(P);
             M.Save(To => P);
             if P(16#0#) = 1969_07_20 then
                Ada.Integer_Text_IO.Put(Integer(Noun));

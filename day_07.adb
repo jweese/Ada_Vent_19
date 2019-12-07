@@ -31,8 +31,7 @@ procedure Day_07 is
    begin
       -- Startup
       for J in Input'Range loop
-         Amps(J).Load(From => Mem);
-         Amps(J).Exec;
+         Amps(J).Load_And_Exec(From => Mem);
          Amps(J).Put(5 + Integer(Input(J)));
       end loop;
 

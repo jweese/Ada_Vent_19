@@ -16,8 +16,7 @@ begin
       M: Intcode.Machine(Hi_Mem => Mem'Last);
       I: Integer;
    begin
-      M.Load(From => Mem);
-      M.Exec;
+      M.Load_And_Exec(From => Mem);
       Ada.Text_IO.Put("? ");
       Ada.Integer_Text_IO.Get(I);
       M.Put(I);
