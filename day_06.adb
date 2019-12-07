@@ -63,21 +63,16 @@ begin
    end loop;
 
    declare
-      Total: Natural := Natural'Last;
       You_Chain: constant Chain := Ancestors(Locals.Element(You));
       Santa_Chain: constant Chain := Ancestors(Locals.Element(Santa));
    begin
       for I in You_Chain'Range loop
          for J in Santa_Chain'Range loop
             if You_Chain(I) = Santa_Chain(J) then
-               declare
-                  Distance: constant Natural := I + J - 2;
-               begin
-                  if Distance < Total then Total := Distance; end if;
-               end;
+               Ada.Integer_Text_IO.Put(I + J - 2);
+               return;
             end if;
          end loop;
       end loop;
-      Ada.Integer_Text_IO.Put(Total);
    end;
 end Day_06;
