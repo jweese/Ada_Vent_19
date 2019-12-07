@@ -12,7 +12,7 @@ procedure Day_05 is
 begin
    Open(F, In_File, Program_Name);
    declare 
-      Mem: Memory.Block := Memory.Read_Comma_Separated(F);
+      Mem: constant Memory.Block := Memory.Read_Comma_Separated(F);
       M: Intcode.Machine(Hi_Mem => Mem'Last);
       I: Integer;
    begin
@@ -31,7 +31,7 @@ begin
          end select;
 
          select
-            M.Save(To => Mem);
+            M.Shutdown;
             exit;
          else
             null;
