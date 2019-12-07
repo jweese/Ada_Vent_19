@@ -86,6 +86,8 @@ package body Intcode is
             To := Mem;
          end Save;
          or
+         accept Shutdown;
+         or
          terminate;
       end select;
    end Machine;

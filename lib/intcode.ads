@@ -7,5 +7,6 @@ package Intcode is
       entry Save(To: out Memory.Block);
       entry Put(I: in Integer);
       entry Get(I: out Integer);
+      entry Shutdown;
    end Machine;
 end Intcode;
