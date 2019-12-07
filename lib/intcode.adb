@@ -46,6 +46,16 @@ package body Intcode is
                when Add => Mem(Store_To) := Params(1) + Params(2);
                when Mul => Mem(Store_To) := Params(1) * Params(2);
 
+               -- I/O
+               when Get =>
+                  accept Put(I: in Integer) do
+                     Mem(Store_To) := Memory.Value(I);
+                  end Put;
+               when Put =>
+                  accept Get(I: out Integer) do
+                     I := Integer(Params(1));
+                  end Get;
+
                when others => null;
             end case;
 

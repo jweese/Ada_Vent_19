@@ -1,4 +1,5 @@
 with Ada.Command_Line;
+with Ada.Integer_Text_IO;
 with Ada.Text_IO;
 use Ada.Text_IO;
 
@@ -11,9 +12,30 @@ procedure Day_05 is
 begin
    Open(F, In_File, Program_Name);
    declare 
-      Mem: constant Memory.Block := Memory.Read_Comma_Separated(F);
-      M: Intcode.Machine := Intcode.New_Machine(Mem);
+      Mem: Memory.Block := Memory.Read_Comma_Separated(F);
+      M: Intcode.Machine(Hi_Mem => Mem'Last);
+      I: Integer;
    begin
-      M.Run;
+      M.Load(From => Mem);
+      M.Exec;
+      Ada.Text_IO.Put("? ");
+      Ada.Integer_Text_IO.Get(I);
+      M.Put(I);
+      loop
+         select
+            M.Get(I);
+            Ada.Integer_Text_IO.Put(I);
+            Ada.Text_IO.New_Line;
+         else
+            null;
+         end select;
+
+         select
+            M.Save(To => Mem);
+            exit;
+         else
+            null;
+         end select;
+      end loop;
    end;
 end Day_05;
