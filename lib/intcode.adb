@@ -56,10 +56,27 @@ package body Intcode is
                      I := Integer(Params(1));
                   end Get;
 
-               when others => null;
+               -- Transfer of Control
+               when Jz =>
+                  if Params(1) = 0 then
+                     PC := Memory.Address(Params(2));
+                     goto Continue;
+                  end if;
+               when Jnz =>
+                  if Params(1) /= 0 then
+                     PC := Memory.Address(Params(2));
+                     goto Continue;
+                  end if;
+
+               -- Comparison
+               when Lt =>
+                  Mem(Store_To) := (if Params(1) < Params(2) then 1 else 0);
+               when Eq =>
+                  Mem(Store_To) := (if Params(1) = Params(2) then 1 else 0);
             end case;
 
             PC := PC + Params'Length + 1;
+            <<Continue>>
          end;
       end loop;
 
