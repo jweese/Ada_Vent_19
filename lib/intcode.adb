@@ -51,8 +51,8 @@ package body Intcode is
                      Mem(Store_To) := Memory.Value(I);
                   end Put;
                when Put =>
-                  accept Get(I: out Integer) do
-                     I := Integer(Params(1));
+                  accept Get(I: in out Output) do
+                     I := (Updated => True, Value => Integer(Params(1)));
                   end Get;
 
                -- Transfer of Control
@@ -79,15 +79,24 @@ package body Intcode is
          end;
       end loop;
 
-      -- Optionally save memory contents.
-      select
-         accept Save(To: out Memory.Block) do
-            To := Mem;
-         end Save;
-         or
-         accept Shutdown;
-         or
-         terminate;
-      end select;
+      -- We have finished execution, but the enclosing task might want to
+      -- save our memory or pretend to interact with a shut-down process.
+      loop
+         select
+            accept Save(To: out Memory.Block) do
+               To := Mem;
+            end Save;
+            or
+            accept Put(I: Integer) do
+               null; -- silently ignore it
+            end Put;
+            or
+            accept Get(I: in out Output) do
+               I.Updated := False;
+            end Get;
+            or
+            terminate;
+         end select;
+      end loop;
    end Machine;
 end Intcode;

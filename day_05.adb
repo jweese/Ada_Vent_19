@@ -15,26 +15,17 @@ begin
       Mem: constant Memory.Block := Memory.Read_Comma_Separated(F);
       M: Intcode.Machine(Hi_Mem => Mem'Last);
       I: Integer;
+      O: Intcode.Output := (Updated => True, Value => 0);
    begin
       M.Load_And_Exec(From => Mem);
       Ada.Text_IO.Put("? ");
       Ada.Integer_Text_IO.Get(I);
       M.Put(I);
       loop
-         select
-            M.Get(I);
-            Ada.Integer_Text_IO.Put(I);
-            Ada.Text_IO.New_Line;
-         else
-            null;
-         end select;
-
-         select
-            M.Shutdown;
-            exit;
-         else
-            null;
-         end select;
+         M.Get(O);
+         exit when not O.Updated;
+         Ada.Integer_Text_IO.Put(O.Value);
+         Ada.Text_IO.New_Line;
       end loop;
    end;
 end Day_05;
