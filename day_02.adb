@@ -11,12 +11,15 @@ begin
    for Noun in Input'Range loop
       for Verb in Input'Range loop
          declare
-            M: Intcode.Machine := Intcode.New_Machine(Mem);
+            P: Memory.Block := Mem;
+            M: Intcode.Machine(Hi_Mem => Mem'Last);
          begin
-            M.Poke(Addr => 16#1#, Value => Noun);
-            M.Poke(Addr => 16#2#, Value => Verb);
-            M.Run;
-            if M.Peek(0) = 1969_07_20 then
+            P(16#1#) := Noun;
+            P(16#2#) := Verb;
+            M.Load(P);
+            M.Exec;
+            M.Save(To => P);
+            if P(16#0#) = 1969_07_20 then
                Ada.Integer_Text_IO.Put(Integer(Noun));
                Ada.Integer_Text_IO.Put(Integer(Verb));
                return;

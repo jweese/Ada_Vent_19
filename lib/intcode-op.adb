@@ -1,8 +1,4 @@
-with Ada.Integer_Text_IO;
-with Ada.Text_IO;
-
 package body Intcode.Op is
-   use type Memory.Address;
    use type Memory.Value;
 
    function Instruction_Size(Instruction: Code) return  Natural is
@@ -46,60 +42,4 @@ package body Intcode.Op is
       end loop;
       return Result;
    end Decode;
-
-   function Load(
-         From: Machine;
-         PC_Offset: Positive;
-         Mode: Parameter_Mode) return Memory.Value is
-      V: constant Memory.Value := From.Mem(From.PC + Memory.Address(PC_Offset));
-   begin
-      case Mode is
-         when Immediate => return V;
-         when Position => return From.Mem(Memory.Address(V));
-      end case;
-   end Load;
-
-   procedure Exec(S: in Schema; M: in out Machine) is
-      Params: array (S.Params'Range) of Memory.Value;
-      Store_To: constant Memory.Address := Memory.Address(
-         Load(From => M, PC_Offset => Params'Last, Mode => Immediate));
-   begin
-      for I in Params'Range loop
-         Params(I) := Load(From => M, PC_Offset => I, Mode => S.Params(I));
-      end loop;
-
-      case S.Instruction is
-         when Halt => return;
-
-         -- Arithmetic
-         when Add => M.Mem(Store_To) := Params(1) + Params(2);
-         when Mul => M.Mem(Store_To) := Params(1) * Params(2);
-
-         -- IO
-         when Get =>
-            Ada.Text_IO.Put("? ");
-            Ada.Integer_Text_IO.Get(Integer(M.Mem(Store_To)));
-         when Put =>
-            Ada.Integer_Text_IO.Put(Integer(Params(1)));
-            Ada.Text_IO.New_Line;
-
-         -- Transfer Control
-         when Jnz =>
-            if Params(1) /= 0 then
-               M.PC := Memory.Address(Params(2));
-               return;
-            end if;
-         when Jz =>
-            if Params(1) = 0 then
-               M.PC := Memory.Address(Params(2));
-               return;
-            end if;
-
-         -- Comparison
-         when Lt => M.Mem(Store_To) := (if Params(1) < Params(2) then 1 else 0);
-         when Eq => M.Mem(Store_To) := (if Params(1) = Params(2) then 1 else 0);
-      end case;
-
-      M.PC := M.PC + Params'Length + 1;
-   end Exec;
 end Intcode.Op;

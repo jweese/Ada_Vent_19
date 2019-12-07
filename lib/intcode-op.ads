@@ -22,6 +22,4 @@ package Intcode.Op is
    end record;
 
    function Decode(V: Memory.Value) return Schema;
-   procedure Exec(S: in Schema; M: in out Machine);
-
 end Intcode.Op;

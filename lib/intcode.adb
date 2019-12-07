@@ -1,33 +1,65 @@
-with Intcode.Op;
+with Intcode.Op; use Intcode.Op;
 
 package body Intcode is
-   function New_Machine(Mem: Memory.Block) return Machine is
-      (
-         High_Mem => Memory.Address'Pred(Mem'Length),
-         PC => 0,
-         Mem => Mem
-      );
+   use type Memory.Address;
+   use type Memory.Value;
 
-   function Peek(M: Machine; Addr: Memory.Address) return Memory.Value is
-      (M.Mem(Addr));
+   task body Machine is
+      PC: Memory.Address; -- program counter
+      Mem: Memory.Block(0 .. Hi_Mem);
 
-   procedure Poke(M: in out Machine; Addr: Memory.Address; Value: Memory.Value)
-   is
+      function Read(
+            From: Memory.Address;
+            Mode: Parameter_Mode) return Memory.Value is
+         V: constant Memory.Value := Mem(From);
+      begin
+         return (case Mode is
+            when Immediate => V,
+            when Position => Mem(Memory.Address(V)));
+      end Read;
+
    begin
-      M.Mem(Addr) := Value;
-   end Poke;
+      accept Load(From: in Memory.Block) do
+         Mem := From;
+         PC := 0;
+      end Load;
 
-   procedure Run(M: in out Machine) is
-      use type Intcode.Op.Code;
-   begin
+      accept Exec;
       loop
          declare
-            Curr_Op: constant Intcode.Op.Schema :=
-               Intcode.Op.Decode(M.Mem(M.PC));
+            Curr_Op: constant Schema := Decode(Mem(PC));
+            Params: array (Curr_Op.Params'Range) of Memory.Value;
+            Store_To: constant Memory.Address := Memory.Address(
+                  Read(
+                     From => PC + Memory.Address(Params'Last),
+                     Mode => Immediate));
          begin
-            exit when Curr_Op.Instruction = Op.Halt;
-            Intcode.Op.Exec(Curr_Op, M);
+            for I in Params'Range loop
+               Params(I) := Read(
+                  From => PC + Memory.Address(I), Mode => Curr_Op.Params(I));
+            end loop;
+
+            case Curr_Op.Instruction is
+               when Halt => exit;
+
+               -- Arithmetic
+               when Add => Mem(Store_To) := Params(1) + Params(2);
+               when Mul => Mem(Store_To) := Params(1) * Params(2);
+
+               when others => null;
+            end case;
+
+            PC := PC + Params'Length + 1;
          end;
       end loop;
-   end Run;
+
+      -- Optionally save memory contents.
+      select
+         accept Save(To: out Memory.Block) do
+            To := Mem;
+         end Save;
+         or
+         terminate;
+      end select;
+   end Machine;
 end Intcode;
