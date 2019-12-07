@@ -5,17 +5,13 @@ package body Intcode.Op is
    use type Memory.Address;
    use type Memory.Value;
 
-   Instruction_Size: constant array (Code) of Natural := (
-      Add => 3,
-      Mul => 3,
-      Get => 1,
-      Put => 1,
-      Jnz => 2,
-      Jz => 2,
-      Lt => 3,
-      Eq => 3,
-      Halt => 0
-   );
+   function Instruction_Size(Instruction: Code) return  Natural is
+      (case Instruction is
+         when Add|Mul => 3,
+         when Get|Put => 1,
+         when Jnz|Jz => 2,
+         when Lt|Eq => 3,
+         when Halt => 0);
 
    function Get_Code(V: Memory.Value) return Code is
    begin
