@@ -27,18 +27,20 @@ procedure Day_07 is
 
    function Amplify(Input: Phases) return Natural is
       I: Natural := 0;
+      Amps: array (Amp_Range) of Intcode.Machine(Hi_Mem => Mem'Last);
    begin
-      for P of Input loop
-         declare
-            Amp: Intcode.Machine(Hi_Mem => Mem'Last);
-         begin
-            Amp.Load(From => Mem);
-            Amp.Exec;
-            Amp.Put(Integer(P));
-            Amp.Put(I);
-            Amp.Get(I);
-         end;
+      -- Startup
+      for J in Input'Range loop
+         Amps(J).Load(From => Mem);
+         Amps(J).Exec;
+         Amps(J).Put(Integer(Input(J)));
       end loop;
+
+      for A of Amps loop
+         A.Put(I);
+         A.Get(I);
+      end loop;
+
       return I;
    end Amplify;
 
