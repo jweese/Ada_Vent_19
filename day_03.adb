@@ -58,7 +58,7 @@ procedure Day_03 is
 
    Wire_1: constant Wire_Vec.Vector := Read_Wire;
    Wire_2: constant Wire_Vec.Vector := Read_Wire;
-   Min_Dist: Natural := 0;
+   Min_Dist: Natural := Natural'Last;
 begin
    for I in Wire_1.First_Index .. Wire_1.Last_Index loop
       declare
@@ -66,10 +66,8 @@ begin
          J: constant Wire_Vec.Extended_Index := Wire_2.Find_Index(P);
          Dist: constant Natural := I + J;
       begin
-         if J /= Wire_Vec.No_Index then
-            if Min_Dist = 0 or else Dist < Min_Dist then
-               Min_Dist := Dist;
-            end if;
+         if J /= Wire_Vec.No_Index and Dist > 0 then
+            Min_Dist := Natural'Min(Min_Dist, Dist);
          end if;
       end;
    end loop;
