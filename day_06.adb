@@ -21,10 +21,7 @@ procedure Day_06 is
    begin
       for I in S'Range loop
          if S(I) = ')' then
-            return (
-               Parent => S(S'First .. I - 1),
-               Self => S(I + 1 .. S'Last)
-            );
+            return (Parent => S(S'First .. I - 1), Self => S(I + 1 .. S'Last));
          end if;
       end loop;
       raise Constraint_Error with "bad orbit" & S;
