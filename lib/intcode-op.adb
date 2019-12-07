@@ -25,7 +25,7 @@ package body Intcode.Op is
          when 7 => return Lt;
          when 8 => return Eq;
          when 99 => return Halt;
-         when others => raise Constraint_Error with "op code" & V'Image;
+         when others => raise Constraint_Error with "unknown op code" & V'Image;
       end case;
    end Get_Code;
 
