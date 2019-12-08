@@ -60,12 +60,13 @@ package body Space_Image_Format is
          (case VC is
             when Black => ' ',
             when White => 'X');
+      Line: String(1 .. Width);
    begin
       for Row in Height_Range loop
          for Col in Width_Range loop
-            Ada.Text_IO.Put(Render(I(Col, Row)));
+            Line(Width_Range'Pos(Col)) := Render(I(Col, Row));
          end loop;
-         Ada.Text_IO.New_Line;
+         Ada.Text_IO.Put_Line(Line);
       end loop;
    end Put_Image;
 end Space_Image_Format;
