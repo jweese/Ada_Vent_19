@@ -17,7 +17,7 @@ procedure Day_08 is
       Index_Type => Positive, Element_Type => Layer);
 
    All_Layers: Layer_Vector.Vector;
-   -- Least_Zeroed_Layer: Layer;
+   Least_Zeroed_Layer: Layer;
    Zero_Count: Natural := Natural'Last;
 begin
    while not Ada.Text_IO.End_Of_File loop
@@ -29,16 +29,23 @@ begin
          Z := Count_Pixel(Within => L, Value => '0');
          if Z < Zero_Count then
             Zero_Count := Z;
-            -- Least_Zeroed_Layer := L;
+            Least_Zeroed_Layer := L;
          end if;
          All_Layers.Append(L);
       end;
    end loop;
 
    declare
+      Ones: constant Natural :=
+            Count_Pixel(Within => Least_Zeroed_Layer, Value => '1');
+      Twos: constant Natural :=
+            Count_Pixel(Within => Least_Zeroed_Layer, Value => '2');
+
       LS: Layer_Stack(All_Layers.First_Index .. All_Layers.Last_Index);
       Output: Image;
    begin
+      Ada.Text_IO.Put_Line("checksum:" & Natural'Image(Ones * Twos));
+      Ada.Text_IO.New_Line;
       for I in LS'Range loop
          LS(I) := All_Layers.Element(I);
       end loop;
