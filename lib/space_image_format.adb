@@ -58,8 +58,8 @@ package body Space_Image_Format is
    procedure Put_Image(I: in Image) is
       function Render(VC: Visible_Color) return Character is
          (case VC is
-            when Black => 'X',
-            when White => ' ');
+            when Black => ' ',
+            when White => 'X');
    begin
       for Row in Height_Range loop
          for Col in Width_Range loop
