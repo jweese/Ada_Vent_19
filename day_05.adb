@@ -3,7 +3,7 @@ with Ada.Integer_Text_IO;
 with Ada.Text_IO;
 use Ada.Text_IO;
 
-with Intcode;
+with IC2;
 with Memory;
 
 procedure Day_05 is
@@ -13,16 +13,20 @@ begin
    Open(F, In_File, Program_Name);
    declare 
       Mem: constant Memory.Block := Memory.Read_Comma_Separated(F);
-      M: Intcode.Machine(Hi_Mem => Mem'Last);
+      M: aliased IC2.Machine :=
+        (Hi_Mem => Mem'Last,
+         Mem => Mem,
+         Input => new IC2.Port,
+         Output => new IC2.Port);
+      Exec: IC2.Executor(M'Access);
       I: Integer;
-      O: Intcode.Output;
+      O: IC2.Maybe_Integer;
    begin
-      M.Load_And_Exec(From => Mem);
       Ada.Text_IO.Put("? ");
       Ada.Integer_Text_IO.Get(I);
-      M.Put(I);
+      M.Input.Put(I);
       loop
-         M.Get(O);
+         M.Output.Get(O);
          exit when not O.Present;
          Ada.Integer_Text_IO.Put(O.Value);
          Ada.Text_IO.New_Line;

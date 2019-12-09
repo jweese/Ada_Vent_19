@@ -9,14 +9,14 @@ package IC2 is
       end case;
    end record;
 
-   type Port_Status is private;
+   type Port_Status is (Empty, Full, Closed);
    protected type Port is
       entry Put(I: in Integer);
       entry Get(X: out Maybe_Integer);
       entry Close;
    private
-      Status: Port_Status;
-      Value: Integer;
+      Status: Port_Status := Empty;
+      Value: Integer := 0;
    end Port;
 
    type Machine(Hi_Mem: Memory.Address) is record
@@ -25,6 +25,4 @@ package IC2 is
    end record;
 
    task type Executor(AM: not null access Machine);
-private
-   type Port_Status is (Empty, Full, Closed);
 end IC2;
