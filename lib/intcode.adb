@@ -1,11 +1,7 @@
-with Ada.Text_IO;
 with Intcode.Op;
 use Intcode.Op;
 
 package body Intcode is
-   use type Memory.Address;
-   use type Memory.Value;
-
    protected body Port is
       entry Put(I: in Memory.Value) when Status /= Full is
       begin
@@ -63,7 +59,6 @@ package body Intcode is
             end loop;
 
             PC := PC + Params'Length + 1;
-            Ada.Text_IO.Put_Line(Curr_Op.Instruction'Image);
             case Curr_Op.Instruction is
                when Halt => exit;
 

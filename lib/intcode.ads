@@ -1,6 +1,11 @@
+with Ada.Containers.Ordered_Maps;
 with Memory;
 
 package Intcode is
+   use type Memory.Address;
+   use type Memory.Value;
+   package Aux_Memory is new Ada.Containers.Ordered_Maps(
+      Key_Type => Memory.Address, Element_Type => Memory.Value);
    type Maybe_Memory_Value(Present: Boolean := False) is
    record
       case Present is
@@ -21,6 +26,7 @@ package Intcode is
 
    type Machine(Hi_Mem: Memory.Address) is record
       Mem: Memory.Block(0 .. Hi_Mem);
+      Aux_Mem: Aux_Memory.Map;
       Input, Output: access Port;
    end record;
 

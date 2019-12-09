@@ -16,6 +16,7 @@ begin
       M: aliased Intcode.Machine :=
         (Hi_Mem => Mem'Last,
          Mem => Mem,
+         Aux_Mem => Intcode.Aux_Memory.Empty_Map,
          Input => new Intcode.Port,
          Output => new Intcode.Port);
       Exec: Intcode.Executor(M'Access);
