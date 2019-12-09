@@ -1,10 +1,10 @@
 with Ada.Integer_Text_IO;
-with IC2;
+with Intcode;
 with Memory;
 
 procedure Day_02 is
    Mem: constant Memory.Block := Memory.Read_Comma_Separated;
-   M: aliased IC2.Machine(Hi_Mem => Mem'Last);
+   M: aliased Intcode.Machine(Hi_Mem => Mem'Last);
 
    use type Memory.Value;
    subtype Input is Memory.Value range 0..99;
@@ -15,7 +15,7 @@ begin
          M.Mem(16#1#) := Noun;
          M.Mem(16#2#) := Verb;
          declare
-            E: IC2.Executor(M'Access);
+            E: Intcode.Executor(M'Access);
          begin
             null; -- wait for E to terminate
          end;

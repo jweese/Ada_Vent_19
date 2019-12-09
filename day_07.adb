@@ -1,5 +1,5 @@
 with Ada.Integer_Text_IO;
-with IC2;
+with Intcode;
 with Memory;
 
 procedure Day_07 is
@@ -27,19 +27,19 @@ procedure Day_07 is
 
    function Amplify(Input: Phases) return Natural is
       Current: Integer := 0;
-      I: IC2.Maybe_Integer;
-      Amps: array (Amp_Range) of aliased IC2.Machine(Hi_Mem => Mem'Last) :=
+      I: Intcode.Maybe_Integer;
+      Amps: array (Amp_Range) of aliased Intcode.Machine(Hi_Mem => Mem'Last) :=
          (others => (Hi_Mem => Mem'Last,
                      Mem => Mem,
-                     Input => new IC2.Port,
-                     Output => new IC2.Port));
-      Exec: array (Amp_Range) of access IC2.Executor;
+                     Input => new Intcode.Port,
+                     Output => new Intcode.Port));
+      Exec: array (Amp_Range) of access Intcode.Executor;
    begin
       -- Startup
       for J in Input'Range loop
          if J /= Input'Last then Amps(J).Output := Amps(J + 1).Input; end if;
          Amps(J).Input.Put(5 + Integer(Input(J)));
-         Exec(J) := new IC2.Executor(AM => Amps(J)'Access);
+         Exec(J) := new Intcode.Executor(AM => Amps(J)'Access);
       end loop;
 
       loop
