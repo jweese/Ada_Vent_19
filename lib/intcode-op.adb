@@ -4,7 +4,7 @@ package body Intcode.Op is
    function Instruction_Size(Instruction: Code) return  Natural is
       (case Instruction is
          when Add|Mul => 3,
-         when Get|Put => 1,
+         when Get|Put|Mrb => 1,
          when Jnz|Jz => 2,
          when Lt|Eq => 3,
          when Halt => 0);
@@ -20,6 +20,7 @@ package body Intcode.Op is
          when 6 => return Jz;
          when 7 => return Lt;
          when 8 => return Eq;
+         when 9 => return Mrb;
          when 99 => return Halt;
          when others => raise Constraint_Error with "unknown op code" & V'Image;
       end case;
@@ -33,11 +34,12 @@ package body Intcode.Op is
       W: Memory.Value := V / 100;
    begin
       for I in Result.Params'Range loop
-         if W mod 10 = 1 then
-            Result.Params(I) := Immediate;
-         else
-            Result.Params(I) := Position;
-         end if;
+         Result.Params(I) :=
+            (case W mod 10 is
+               when 0 => Position,
+               when 1 => Immediate,
+               when 2 => Relative,
+               when others => raise Constraint_Error with "unknown mode");
          W := W / 10;
       end loop;
       return Result;

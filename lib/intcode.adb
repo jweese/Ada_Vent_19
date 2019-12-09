@@ -1,3 +1,4 @@
+with Ada.Text_IO;
 with Intcode.Op;
 use Intcode.Op;
 
@@ -32,6 +33,7 @@ package body Intcode is
 
    task body Executor is
       PC: Memory.Address := 0;
+      Relative_Base: Memory.Address := 0;
 
       function Read(
             From: Memory.Address;
@@ -41,7 +43,8 @@ package body Intcode is
       begin
          return (case Mode is
             when Immediate => V,
-            when Position => AM.Mem(Memory.Address(V)));
+            when Position => AM.Mem(Memory.Address(V)),
+            when Relative => AM.Mem(Relative_Base + Memory.Address(V)));
       end Read;
    begin
       loop
@@ -60,6 +63,7 @@ package body Intcode is
             end loop;
 
             PC := PC + Params'Length + 1;
+            Ada.Text_IO.Put_Line(Curr_Op.Instruction'Image);
             case Curr_Op.Instruction is
                when Halt => exit;
 
@@ -84,6 +88,9 @@ package body Intcode is
                   if Params(1) /= 0 then
                      PC := Memory.Address(Params(2));
                   end if;
+
+               -- Modify relative base
+               when Mrb => Relative_Base := Memory.Address(Params(1));
 
                -- Comparison
                when Lt =>

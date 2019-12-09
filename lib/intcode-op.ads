@@ -10,10 +10,11 @@ package Intcode.Op is
       Jz,
       Lt,
       Eq,
+      Mrb,
       Halt
    );
 
-   type Parameter_Mode is (Position, Immediate);
+   type Parameter_Mode is (Position, Immediate, Relative);
    type Parameter_List is array (Positive range <>) of Parameter_Mode;
 
    type Schema(Num_Params: Natural) is record
