@@ -40,10 +40,8 @@ procedure Day_07 is
          for A of Amps loop
             A.Put(Current);
             A.Get(I);
-            case I.Present is
-               when True => Current := I.Value;
-               when False => return Current;
-            end case;
+            if not I.Present then return Current; end if;
+            Current := I.Value;
          end loop;
       end loop;
    end Amplify;
