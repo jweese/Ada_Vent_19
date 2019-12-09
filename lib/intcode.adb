@@ -31,6 +31,17 @@ package body Intcode is
       PC: Memory.Address := 0;
       Relative_Base: Memory.Address := 0;
 
+      function Peek(From: Memory.Address) return Memory.Value is
+      begin
+         if From in AM.Mem'Range then
+            return AM.Mem(From);
+         elsif AM.Aux_Mem.Contains(From) then
+            return AM.Aux_Mem.Element(From);
+         else
+            return 0;
+         end if;
+      end Peek;
+
       function Read(
             From: Memory.Address;
             Mode: Parameter_Mode) return Memory.Value is
