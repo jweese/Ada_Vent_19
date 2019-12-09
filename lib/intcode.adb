@@ -6,7 +6,7 @@ package body Intcode is
    use type Memory.Value;
 
    protected body Port is
-      entry Put(I: in Integer) when Status /= Full is
+      entry Put(I: in Memory.Value) when Status /= Full is
       begin
          if Status = Empty then
             Value := I;
@@ -14,7 +14,7 @@ package body Intcode is
          end if;
       end Put;
 
-      entry Get(X: out Maybe_Integer) when Status /= Empty is
+      entry Get(X: out Maybe_Memory_Value) when Status /= Empty is
       begin
          case Status is
             when Full =>
@@ -52,7 +52,7 @@ package body Intcode is
                   Read(
                      From => PC + Memory.Address(Params'Last),
                      Mode => Immediate));
-            Recv: Maybe_Integer;
+            Recv: Maybe_Memory_Value;
          begin
             for I in Params'Range loop
                Params(I) := Read(
@@ -71,9 +71,9 @@ package body Intcode is
                when Get =>
                   AM.Input.Get(Recv);
                   if Recv.Present then
-                     AM.Mem(Store_To) := Memory.Value(Recv.Value);
+                     AM.Mem(Store_To) := Recv.Value;
                   end if;
-               when Put => AM.Output.Put(Integer(Params(1)));
+               when Put => AM.Output.Put(Params(1));
 
                -- Transfer of Control
                when Jz =>

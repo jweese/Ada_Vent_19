@@ -1,5 +1,4 @@
 with Ada.Command_Line;
-with Ada.Integer_Text_IO;
 with Ada.Text_IO;
 use Ada.Text_IO;
 
@@ -7,6 +6,7 @@ with Intcode;
 with Memory;
 
 procedure Day_05 is
+   package IO is new Ada.Text_IO.Integer_IO(Memory.Value);
    Program_Name: constant String := Ada.Command_Line.Argument(1);
    F: File_Type;
 begin
@@ -19,16 +19,16 @@ begin
          Input => new Intcode.Port,
          Output => new Intcode.Port);
       Exec: Intcode.Executor(M'Access);
-      I: Integer;
-      O: Intcode.Maybe_Integer;
+      I: Memory.Value;
+      O: Intcode.Maybe_Memory_Value;
    begin
       Ada.Text_IO.Put("? ");
-      Ada.Integer_Text_IO.Get(I);
+      IO.Get(I);
       M.Input.Put(I);
       loop
          M.Output.Get(O);
          exit when not O.Present;
-         Ada.Integer_Text_IO.Put(O.Value);
+         IO.Put(O.Value);
          Ada.Text_IO.New_Line;
       end loop;
    end;

@@ -2,8 +2,8 @@ with Ada.Text_IO;
 use Ada.Text_IO;
 
 package Memory is
-   type Address is new Natural;
-   type Value is new Integer;
+   type Address is range 0 .. 2 ** 63 - 1;
+   type Value is range -(2 ** 63) .. 2 ** 63 - 1;
    type Block is array(Address range <>) of Value;
 
    function Read_Comma_Separated(
