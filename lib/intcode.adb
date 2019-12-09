@@ -85,14 +85,14 @@ package body Intcode is
                when Halt => exit;
 
                -- Arithmetic
-               when Add => AM.Mem(Store_To) := Params(1) + Params(2);
-               when Mul => AM.Mem(Store_To) := Params(1) * Params(2);
+               when Add => Poke(Store_To, Params(1) + Params(2));
+               when Mul => Poke(Store_To, Params(1) * Params(2));
 
                -- I/O
                when Get =>
                   AM.Input.Get(Recv);
                   if Recv.Present then
-                     AM.Mem(Store_To) := Recv.Value;
+                     Poke(Store_To, Recv.Value);
                   end if;
                when Put => AM.Output.Put(Params(1));
 
@@ -111,9 +111,9 @@ package body Intcode is
 
                -- Comparison
                when Lt =>
-                  AM.Mem(Store_To) := (if Params(1) < Params(2) then 1 else 0);
+                  Poke(Store_To, (if Params(1) < Params(2) then 1 else 0));
                when Eq =>
-                  AM.Mem(Store_To) := (if Params(1) = Params(2) then 1 else 0);
+                  Poke(Store_To, (if Params(1) = Params(2) then 1 else 0));
             end case;
          end;
       end loop;
