@@ -42,6 +42,17 @@ package body Intcode is
          end if;
       end Peek;
 
+      procedure Poke(To: Memory.Address; Value: Memory.Value) is
+      begin
+         if To in AM.Mem'Range then
+            AM.Mem(To) := Value;
+         elsif AM.Aux_Mem.Contains(To) then
+            AM.Aux_Mem.Replace(To, Value);
+         else
+            AM.Aux_Mem.Insert(To, Value);
+         end if;
+      end Poke;
+
       function Read(
             From: Memory.Address;
             Mode: Parameter_Mode) return Memory.Value is
