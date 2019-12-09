@@ -19,12 +19,12 @@ package IC2 is
       Value: Integer;
    end Port;
 
-   type M(Hi_Mem: Memory.Address) is record
+   type Machine(Hi_Mem: Memory.Address) is record
       Mem: Memory.Block(1 .. Hi_Mem);
-      Input, Output: Port;
+      Input, Output: access Port;
    end record;
 
-   task type T(AM: not null access M);
+   task type Executor(AM: not null access Machine);
 private
    type Port_Status is (Empty, Full, Closed);
 end IC2;

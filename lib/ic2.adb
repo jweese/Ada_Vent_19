@@ -23,4 +23,11 @@ package body IC2 is
          Status := Closed;
       end Close;
    end Port;
+
+   task body Executor is
+      PC: Memory.Address := 0;
+   begin
+      AM.Input.Close;
+      AM.Output.Close;
+   end Executor;
 end IC2;
