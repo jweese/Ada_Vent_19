@@ -20,7 +20,7 @@ package IC2 is
    end Port;
 
    type Machine(Hi_Mem: Memory.Address) is record
-      Mem: Memory.Block(1 .. Hi_Mem);
+      Mem: Memory.Block(0 .. Hi_Mem);
       Input, Output: access Port;
    end record;
 
