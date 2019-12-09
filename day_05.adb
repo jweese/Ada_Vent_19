@@ -15,7 +15,7 @@ begin
       Mem: constant Memory.Block := Memory.Read_Comma_Separated(F);
       M: Intcode.Machine(Hi_Mem => Mem'Last);
       I: Integer;
-      O: Intcode.Output := (Updated => True, Value => 0);
+      O: Intcode.Output;
    begin
       M.Load_And_Exec(From => Mem);
       Ada.Text_IO.Put("? ");
@@ -23,7 +23,7 @@ begin
       M.Put(I);
       loop
          M.Get(O);
-         exit when not O.Updated;
+         exit when not O.Present;
          Ada.Integer_Text_IO.Put(O.Value);
          Ada.Text_IO.New_Line;
       end loop;

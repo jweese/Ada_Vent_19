@@ -26,7 +26,8 @@ procedure Day_07 is
    end Valid; 
 
    function Amplify(Input: Phases) return Natural is
-      I: Intcode.Output := (Updated => True, Value => 0);
+      Current: Integer := 0;
+      I: Intcode.Output;
       Amps: array (Amp_Range) of Intcode.Machine(Hi_Mem => Mem'Last);
    begin
       -- Startup
@@ -37,13 +38,14 @@ procedure Day_07 is
 
       loop
          for A of Amps loop
-            A.Put(I.Value);
+            A.Put(Current);
             A.Get(I);
+            case I.Present is
+               when True => Current := I.Value;
+               when False => return Current;
+            end case;
          end loop;
-         exit when not I.Updated;
       end loop;
-
-      return I.Value;
    end Amplify;
 
    Max_Output: Natural := 0;

@@ -52,7 +52,7 @@ package body Intcode is
                   end Put;
                when Put =>
                   accept Get(I: in out Output) do
-                     I := (Updated => True, Value => Integer(Params(1)));
+                     I := (Present => True, Value => Integer(Params(1)));
                   end Get;
 
                -- Transfer of Control
@@ -92,7 +92,7 @@ package body Intcode is
             end Put;
             or
             accept Get(I: in out Output) do
-               I.Updated := False;
+               I := (Present => False);
             end Get;
             or
             terminate;

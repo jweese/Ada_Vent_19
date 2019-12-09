@@ -1,9 +1,11 @@
 with Memory;
 
 package Intcode is
-   type Output is record
-      Updated: Boolean;
-      Value: Integer;
+   type Output(Present: Boolean := False) is record
+      case Present is
+         when False => null;
+         when True => Value: Integer;
+      end case;
    end record;
 
    task type Machine(Hi_Mem: Memory.Address) is
