@@ -45,13 +45,13 @@ package body Intcode is
       function Read(
             From: Memory.Address;
             Mode: Parameter_Mode) return Memory.Value is
-         V: constant Memory.Value := AM.Mem(From);
+         V: constant Memory.Value := Peek(From);
 
       begin
          return (case Mode is
             when Immediate => V,
-            when Position => AM.Mem(Memory.Address(V)),
-            when Relative => AM.Mem(Relative_Base + Memory.Address(V)));
+            when Position => Peek(Memory.Address(V)),
+            when Relative => Peek(Relative_Base + Memory.Address(V)));
       end Read;
    begin
       loop
