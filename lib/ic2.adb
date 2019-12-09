@@ -3,6 +3,7 @@ use Intcode.Op;
 
 package body IC2 is
    use type Memory.Address;
+   use type Memory.Value;
 
    protected body Port is
       entry Put(I: in Integer) when Status /= Full is
@@ -51,13 +52,45 @@ package body IC2 is
                   Read(
                      From => PC + Memory.Address(Params'Last),
                      Mode => Immediate));
+            Recv: Maybe_Integer;
          begin
             for I in Params'Range loop
                Params(I) := Read(
                   From => PC + Memory.Address(I), Mode => Curr_Op.Params(I));
             end loop;
 
-            exit;
+            PC := PC + Params'Length + 1;
+            case Curr_Op.Instruction is
+               when Halt => exit;
+
+               -- Arithmetic
+               when Add => AM.Mem(Store_To) := Params(1) + Params(2);
+               when Mul => AM.Mem(Store_To) := Params(1) * Params(2);
+
+               -- I/O
+               when Get =>
+                  AM.Input.Get(Recv);
+                  if Recv.Present then
+                     AM.Mem(Store_To) := Memory.Value(Recv.Value);
+                  end if;
+               when Put => AM.Output.Put(Integer(Params(1)));
+
+               -- Transfer of Control
+               when Jz =>
+                  if Params(1) = 0 then
+                     PC := Memory.Address(Params(2));
+                  end if;
+               when Jnz =>
+                  if Params(1) /= 0 then
+                     PC := Memory.Address(Params(2));
+                  end if;
+
+               -- Comparison
+               when Lt =>
+                  AM.Mem(Store_To) := (if Params(1) < Params(2) then 1 else 0);
+               when Eq =>
+                  AM.Mem(Store_To) := (if Params(1) = Params(2) then 1 else 0);
+            end case;
          end;
       end loop;
 
