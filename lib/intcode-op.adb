@@ -7,7 +7,7 @@ package body Intcode.Op is
          when Get|Put|Mrb => 1,
          when Jnz|Jz => 2,
          when Lt|Eq => 3,
-         when Halt => 0);
+         when Halt => 1);
 
    function Get_Code(V: Memory.Value) return Code is
    begin
